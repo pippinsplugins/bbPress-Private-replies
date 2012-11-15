@@ -21,6 +21,11 @@ class BBP_Private_Replies {
 	 * Initializes the plugin by setting localization, filters, and administration functions.
 	 */
 	function __construct() {
+	
+		// Constants
+		if(!defined('BBP_PLUGIN_DIR')) {
+			define('BBP_PLUGIN_DIR', plugin_dir_url( __FILE__ ));
+		}
 
 		// load the plugin translation files
 		add_action( 'init', array( $this, 'textdomain' ) );
@@ -38,6 +43,9 @@ class BBP_Private_Replies {
 
 		// add a class name indicating the read status
 		add_filter( 'post_class', array( $this, 'reply_post_class' ) );
+		
+		// register css files
+		add_action( 'wp_enqueue_scripts', array( $this, 'register_plugin_styles' ) );
 
 	} // end constructor
 
@@ -51,6 +59,18 @@ class BBP_Private_Replies {
 	 */
 	public function textdomain() {
 		load_plugin_textdomain( 'bbp_private_replies', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
+	}
+	
+	/**
+	 * Load the plugin's CSS files
+	 *
+	 * @since 1.0
+	 *
+	 * @return void
+	 */
+	public function register_plugin_styles() {
+	    wp_register_style( 'bbp_private_replies_style', BBP_PLUGIN_DIR . '/includes/css/frond-end.css' );
+	    wp_enqueue_style( 'bbp_private_replies_style' );
 	}
 
 	/**
