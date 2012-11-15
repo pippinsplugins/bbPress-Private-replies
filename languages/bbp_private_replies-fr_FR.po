@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: bbPress Private Replies\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-11-15 18:53+0100\n"
-"PO-Revision-Date: 2012-11-15 18:55+0100\n"
+"PO-Revision-Date: 2012-11-15 18:59+0100\n"
 "Last-Translator: remi\n"
 "Language-Team: Pippin's Plugins, Rémi Corson <pippin@pippinsplugins.com>\n"
 "MIME-Version: 1.0\n"
@@ -17,9 +17,9 @@ msgstr ""
 
 #: ../bbp-private-replies.php:72
 msgid "Set author's post as private."
-msgstr "Marquer la réponse de l'auteur comme privée."
+msgstr "Rendre la réponse de l'auteur privée."
 
 #: ../bbp-private-replies.php:76
 msgid "Set as private reply"
-msgstr "Marquer comme réponse privée"
+msgstr "Rendre cette réponse privée"
 
