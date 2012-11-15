@@ -36,6 +36,8 @@ Would you like to help translate the plugin into more langauges? [Contact Pippin
 
 1. Screenshot 1
 2. Screenshot 2
+3. Screenshot 3
+4. Screenshot 4
 
 
 == Changelog ==
