@@ -204,7 +204,7 @@ class BBP_Private_Replies {
 	 * @return void
 	 */
 	public function register_plugin_styles() {
-	    wp_enqueue_style( 'bbp_private_replies_style' plugin_dir_url( __FILE__ ) . '/includes/css/frond-end.css', filemtime() );
+	    wp_enqueue_style( 'bbp_private_replies_style' plugin_dir_url( __FILE__ ) . '/css/frond-end.css', filemtime() );
 	}
 
 } // end class
