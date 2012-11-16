@@ -24,7 +24,7 @@ Private Replies for bbPress as been translated into the following languages:
 1. English
 2. French
 
-Would you like to help translate the plugin into more langauges? [Contact Pippin](http://pippinsplugins.com/contact).
+Would you like to help translate the plugin into more languages? [Contact Pippin](http://pippinsplugins.com/contact).
 
 == Installation ==
 
