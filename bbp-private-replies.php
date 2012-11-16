@@ -160,7 +160,7 @@ class BBP_Private_Replies {
 		
 		if( $this->is_private( $reply_id ) ) {
 
-			$topic_author = bbp_get_topic_author_id( $bbp_topic_id );
+			$topic_author = bbp_get_topic_author_id();
 			$reply_author = bbp_get_reply_author_id( $reply_id );
 
 			if( $topic_author != bbp_get_current_user_id() && $reply_author != bbp_get_current_user_id() && !current_user_can( 'publish_forums' ) ) {
