@@ -1,4 +1,5 @@
 <?php
+
 /*
 Plugin Name: bbPress - Private Replies
 Plugin URL: http://pippinsplugins.com/bbpress-private-replies
