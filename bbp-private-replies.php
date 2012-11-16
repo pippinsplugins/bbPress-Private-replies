@@ -162,7 +162,7 @@ class BBP_Private_Replies {
 
 			$reply_author = bbp_get_reply_author_id( $reply_id );
 
-			if( $reply_author != bbp_get_current_user_id() && ! current_user_can( 'bbp_forums_admin' ) ) {
+			if( $reply_author != bbp_get_current_user_id() && !current_user_can( 'publish_forums' ) ) {
 
 				$content = __( 'This reply has been marked as private.', 'bbp_private_replies' );
 
