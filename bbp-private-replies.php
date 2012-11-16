@@ -156,13 +156,14 @@ class BBP_Private_Replies {
 	 *
 	 * @return string
 	 */
-	public function hide_reply( $content, $reply_id ) {
+	public function hide_reply( $content, $reply_id) {
 		
 		if( $this->is_private( $reply_id ) ) {
 
+			$topic_author = bbp_get_topic_author_id( $bbp_topic_id );
 			$reply_author = bbp_get_reply_author_id( $reply_id );
 
-			if( $reply_author != bbp_get_current_user_id() && !current_user_can( 'publish_forums' ) ) {
+			if( $topic_author != bbp_get_current_user_id() && $reply_author != bbp_get_current_user_id() && !current_user_can( 'publish_forums' ) ) {
 
 				$content = __( 'This reply has been marked as private.', 'bbp_private_replies' );
 
