@@ -38,7 +38,7 @@ class BBP_Private_Replies {
 
 		// add a class name indicating the read status
 		add_filter( 'post_class', array( $this, 'reply_post_class' ) );
-		
+
 		// register css files
 		add_action( 'wp_enqueue_scripts', array( $this, 'register_plugin_styles' ) );
 
@@ -123,7 +123,7 @@ class BBP_Private_Replies {
 	public function is_private( $reply_id = 0 ) {
 
 		$retval 	= false;
-	
+
 		// Checking a specific reply id
 		if ( !empty( $reply_id ) ) {
 			$reply     = bbp_get_reply( $reply_id );
@@ -157,7 +157,7 @@ class BBP_Private_Replies {
 	 * @return string
 	 */
 	public function hide_reply( $content, $reply_id) {
-		
+
 		if( $this->is_private( $reply_id ) ) {
 
 			$topic_author = bbp_get_topic_author_id();
@@ -186,7 +186,7 @@ class BBP_Private_Replies {
 	 */
 	public function reply_post_class( $classes ) {
 		global $post;
-		
+
 		// only apply the class to replies
 		if( bbp_get_reply_post_type() != get_post_type( $post ) )
 			return $classes;
@@ -196,7 +196,7 @@ class BBP_Private_Replies {
 
 		return $classes;
 	}
-  
+
 	/**
 	 * Load the plugin's CSS files
 	 *
