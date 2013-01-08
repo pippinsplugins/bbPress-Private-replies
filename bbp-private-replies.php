@@ -36,6 +36,9 @@ class BBP_Private_Replies {
 		add_filter( 'bbp_get_reply_excerpt', array( $this, 'hide_reply' ), 0, 2 );
 		add_filter( 'bbp_get_reply_content', array( $this, 'hide_reply' ), 0, 2 );
 
+		// prevent private replies from being sent in email subscriptions
+		add_filter( 'bbp_subscription_mail_message', array( $this, 'prevent_subscription_email' ), 10, 4 );
+
 		// add a class name indicating the read status
 		add_filter( 'post_class', array( $this, 'reply_post_class' ) );
 
@@ -172,6 +175,33 @@ class BBP_Private_Replies {
 		}
 
 		return $content;
+	}
+
+
+	/**
+	 * Prevents a New Reply notification from being sent if the user doesn't have permission to view it
+	 *
+	 * @since 1.1
+	 *
+	 * @param $message string The email message
+	 * @param $reply_id int The ID of the reply
+	 * @param $topic_id int The ID of the reply's topic
+	 * @param $user_id int The ID of the user receiving the notification
+	 *
+	 * @return mixed
+	 */
+	public function prevent_subscription_email( $message, $reply_id, $topic_id, $user_id ) {
+
+		if( ! $this->is_private( $reply_id ) )
+			return $message; // reply isn't private so return message unchanged
+
+		$topic_author = bbp_get_topic_author_id( $topic_id );
+		$reply_author = bbp_get_reply_author_id( $reply_id );
+
+		if( $topic_author != $user_id && $reply_author != $user_id && ! user_can( $user_id, 'publish_forums' ) )
+			return false; // this prevents the email from getting sent
+
+		return $message; // message unchanged
 	}
 
 
