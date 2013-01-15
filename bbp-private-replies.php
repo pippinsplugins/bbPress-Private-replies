@@ -162,15 +162,17 @@ class BBP_Private_Replies {
 	public function hide_reply( $content, $reply_id) {
 
 		if( $this->is_private( $reply_id ) ) {
+		
+			$current_user = wp_get_current_user();
 
 			$topic_author = bbp_get_topic_author_id();
 			$reply_author = bbp_get_reply_author_id( $reply_id );
 
-			if( $topic_author != bbp_get_current_user_id() && $reply_author != bbp_get_current_user_id() && !current_user_can( 'publish_forums' ) ) {
+			if( $topic_author != $current_user->ID && $reply_author != $current_user->ID && current_user_can( 'publish_forums' ) == false ) {
 
 				$content = __( 'This reply has been marked as private.', 'bbp_private_replies' );
 
-			}
+			} 
 
 		}
 
