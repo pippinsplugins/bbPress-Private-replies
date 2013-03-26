@@ -200,7 +200,7 @@ class BBP_Private_Replies {
 		$topic_author = bbp_get_topic_author_id( $topic_id );
 		$reply_author = bbp_get_reply_author_id( $reply_id );
 
-		if( $topic_author != $user_id && $reply_author != $user_id && ! user_can( $user_id, 'publish_forums' ) )
+		if( $topic_author != $user_id && ! user_can( $user_id, 'moderate' ) )
 			return false; // this prevents the email from getting sent
 
 		return $message; // message unchanged
