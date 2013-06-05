@@ -222,13 +222,14 @@ class BBP_Private_Replies {
 	 * @return bool
 	 */
 	public function reply_post_class( $classes ) {
-		global $post;
+
+		$reply_id = bbp_get_reply_id();
 
 		// only apply the class to replies
-		if( bbp_get_reply_post_type() != get_post_type( $post ) )
+		if( bbp_get_reply_post_type() != get_post_type( $reply_id ) )
 			return $classes;
 
-		if( $this->is_private( $post->ID ) )
+		if( $this->is_private( $reply_id ) )
 			$classes[] = 'bbp-private-reply';
 
 		return $classes;
