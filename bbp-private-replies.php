@@ -26,7 +26,7 @@ class BBP_Private_Replies {
 		add_action( 'init', array( $this, 'textdomain' ) );
 
 		// show the "Private Reply?" checkbox
-		add_action( 'bbp_theme_before_reply_form_subscription', array( $this, 'checkbox' ) );
+		add_action( 'bbp_theme_before_reply_form_submit_wrapper', array( $this, 'checkbox' ) );
 
 		// save the private reply state
 		add_action( 'bbp_new_reply',  array( $this, 'update_reply' ), 0, 6 );
