@@ -3,7 +3,7 @@
 Plugin Name: bbPress - Private Replies
 Plugin URL: http://pippinsplugins.com/bbpress-private-replies
 Description: Allows users to set replies as private so that only the original poster and admins can see it
-Version: 1.0.8
+Version: 1.0.9
 Author: Pippin Williamson and Remi Corson
 Author URI: http://pippinsplugins.com
 Contributors: mordauk, corsonr
@@ -205,7 +205,7 @@ class BBP_Private_Replies {
 		$topic_author = bbp_get_topic_author_id( $topic_id );
 		$reply_author = bbp_get_reply_author_id( $reply_id );
 
-		if( $topic_author != $user_id && ! user_can( $user_id, 'moderate' ) )
+		if( ( $topic_author != $user_id || $topic_author != $reply_author ) && $reply_author != $user_id && ! user_can( $user_id, 'moderate' ) )
 			return false; // this prevents the email from getting sent
 
 		return $message; // message unchanged
