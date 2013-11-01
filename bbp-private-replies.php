@@ -3,7 +3,7 @@
 Plugin Name: bbPress - Private Replies
 Plugin URL: http://pippinsplugins.com/bbpress-private-replies
 Description: Allows users to set replies as private so that only the original poster and admins can see it
-Version: 1.0.8
+Version: 1.0.9
 Author: Pippin Williamson and Remi Corson
 Author URI: http://pippinsplugins.com
 Contributors: mordauk, corsonr
@@ -26,7 +26,7 @@ class BBP_Private_Replies {
 		add_action( 'init', array( $this, 'textdomain' ) );
 
 		// show the "Private Reply?" checkbox
-		add_action( 'bbp_theme_before_reply_form_subscription', array( $this, 'checkbox' ) );
+		add_action( 'bbp_theme_before_reply_form_submit_wrapper', array( $this, 'checkbox' ) );
 
 		// save the private reply state
 		add_action( 'bbp_new_reply',  array( $this, 'update_reply' ), 0, 6 );
@@ -173,7 +173,7 @@ class BBP_Private_Replies {
 			$topic_author = bbp_get_topic_author_id();
 			$reply_author = bbp_get_reply_author_id( $reply_id );
 
-			if( $topic_author != $current_user->ID && $reply_author != $current_user->ID && ! current_user_can( 'publish_forums' ) ) {
+			if( ( $topic_author != $current_user->ID && $topic_author != $reply_author ) && $reply_author != $current_user->ID && ! current_user_can( 'moderate' ) ) {
 
 				$content = __( 'This reply has been marked as private.', 'bbp_private_replies' );
 
@@ -205,7 +205,7 @@ class BBP_Private_Replies {
 		$topic_author = bbp_get_topic_author_id( $topic_id );
 		$reply_author = bbp_get_reply_author_id( $reply_id );
 
-		if( $topic_author != $user_id && ! user_can( $user_id, 'moderate' ) )
+		if( ( $topic_author != $user_id || $topic_author != $reply_author ) && $reply_author != $user_id && ! user_can( $user_id, 'moderate' ) )
 			return false; // this prevents the email from getting sent
 
 		return $message; // message unchanged
@@ -222,13 +222,14 @@ class BBP_Private_Replies {
 	 * @return bool
 	 */
 	public function reply_post_class( $classes ) {
-		global $post;
+
+		$reply_id = bbp_get_reply_id();
 
 		// only apply the class to replies
-		if( bbp_get_reply_post_type() != get_post_type( $post ) )
+		if( bbp_get_reply_post_type() != get_post_type( $reply_id ) )
 			return $classes;
 
-		if( $this->is_private( $post->ID ) )
+		if( $this->is_private( $reply_id ) )
 			$classes[] = 'bbp-private-reply';
 
 		return $classes;

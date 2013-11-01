@@ -6,7 +6,7 @@ Donate link: http://pippinsplugins.com/support-the-site
 Tags: bbPress, private replies, replies, Forums, mordauk, Pippin Williamson, pippinsplugins, Remi Corson, corsonr
 Requires at least: 3.2
 Tested up to: 3.5
-Stable Tag: 1.0.8
+Stable Tag: 1.0.9
 
 
 A simple plugin to allow your bbPress users to mark their replies as private.
@@ -42,9 +42,19 @@ Would you like to help translate the plugin into more languages? [Contact Pippin
 
 == Changelog ==
 
+<<<<<<< HEAD
 = 1.0.8 =
 
 * Fixed a bug that caused authorized users to not be able to see private replies
+=======
+= 1.0.9 =
+
+* Fixed a bug with topic authors would receive email notifications on private replies by other authors on the same thread
+
+= 1.0.8 =
+
+* Fixed a bug with topic authors could see private replies of other authors in the same thread
+>>>>>>> 4681f3daed7b8cf9a3ccbff39f14def882babeea
 
 = 1.0.7 =
 
