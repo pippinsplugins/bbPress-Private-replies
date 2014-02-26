@@ -173,8 +173,8 @@ class BBP_Private_Replies {
 			$topic_author = bbp_get_topic_author_id();
 			$reply_author = bbp_get_reply_author_id( $reply_id );
 
-			if( $topic_author == $current_user->ID ) {
-				// Let the thread author view all replies
+			if( $topic_author == $current_user->ID && user_can( $reply_author, 'moderate' ) ) {
+				// Let the thread author view replies if the reply author is from a moderator
 				$can_view = true;
 			}
 
