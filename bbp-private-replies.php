@@ -39,7 +39,7 @@ class BBP_Private_Replies {
 		add_filter( 'the_excerpt', array( $this, 'hide_reply' ), 999 );
 
 		// prevent private replies from being sent in email subscriptions
-		add_filter( 'bbp_subscription_mail_message', array( $this, 'prevent_subscription_email' ), 10, 4 );
+		add_filter( 'bbp_subscription_mail_message', array( $this, 'prevent_subscription_email' ), 10, 3 );
 
 		// add a class name indicating the read status
 		add_filter( 'post_class', array( $this, 'reply_post_class' ) );
@@ -205,22 +205,81 @@ class BBP_Private_Replies {
 	 * @param $message string The email message
 	 * @param $reply_id int The ID of the reply
 	 * @param $topic_id int The ID of the reply's topic
-	 * @param $user_id int The ID of the user receiving the notification
 	 *
 	 * @return mixed
 	 */
-	public function prevent_subscription_email( $message, $reply_id, $topic_id, $user_id ) {
+	public function prevent_subscription_email( $message, $reply_id, $topic_id ) {
 
-		if( ! $this->is_private( $reply_id ) )
-			return $message; // reply isn't private so return message unchanged
-
-		$topic_author = bbp_get_topic_author_id( $topic_id );
-		$reply_author = bbp_get_reply_author_id( $reply_id );
-
-		if( ( $topic_author != $user_id || $topic_author != $reply_author ) && $reply_author != $user_id && ! user_can( $user_id, 'moderate' ) )
-			return false; // this prevents the email from getting sent
-
+		if( $this->is_private( $reply_id ) ) {
+			$this->subscription_email( $message, $reply_id, $topic_id );
+			return false;
+		}
+		
 		return $message; // message unchanged
+	}
+
+
+	/**
+	 * Sends the new reply notification email to moderators on private replies
+	 *
+	 * @since 1.2
+	 *
+	 * @param $message string The email message
+	 * @param $reply_id int The ID of the reply
+	 * @param $topic_id int The ID of the reply's topic
+	 *
+	 * @return void
+	 */
+	public function subscription_email( $message, $reply_id, $topic_id ) {
+
+		if( ! $this->is_private( $reply_id ) ) {
+
+			return false; // reply isn't private so do nothing
+
+		}
+
+		$topic_author      = bbp_get_topic_author_id( $topic_id );
+		$reply_author      = bbp_get_reply_author_id( $reply_id );
+		$reply_author_name = bbp_get_reply_author_display_name( $reply_id );
+
+		// Strip tags from text and setup mail data
+		$topic_title   = strip_tags( bbp_get_topic_title( $topic_id ) );
+		$reply_content = strip_tags( bbp_get_reply_content( $reply_id ) );
+		$reply_url     = bbp_get_reply_url( $reply_id );
+		$blog_name     = wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES );
+		$do_not_reply  = '<noreply@' . ltrim( get_home_url(), '^(http|https)://' ) . '>';
+
+		$subject = apply_filters( 'bbp_subscription_mail_title', '[' . $blog_name . '] ' . $topic_title, $reply_id, $topic_id );
+
+		// Array to hold BCC's
+		$headers = array();
+
+		// Setup the From header
+		$headers[] = 'From: ' . get_bloginfo( 'name' ) . ' ' . $do_not_reply;
+
+		// Get topic subscribers and bail if empty
+		$user_ids = bbp_get_topic_subscribers( $topic_id, true );
+		if ( empty( $user_ids ) ) {
+			return false;
+		}
+
+		// Loop through users
+		foreach ( (array) $user_ids as $user_id ) {
+
+			// Don't send notifications to the person who made the post
+			if ( ! empty( $reply_author ) && (int) $user_id === (int) $reply_author ) {
+				continue;
+			}
+
+			if( user_can( $user_id, 'moderate' ) || (int) $topic_author === (int) $user_id ) {
+
+				// Get email address of subscribed user
+				$headers[] = 'Bcc: ' . get_userdata( $user_id )->user_email;
+			
+			}
+		}
+
+		wp_mail( $do_not_reply, $subject, $message, $headers );
 	}
 
 
