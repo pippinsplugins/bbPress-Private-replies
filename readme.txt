@@ -5,9 +5,8 @@ Contributors: mordauk, corsonr
 Donate link: http://pippinsplugins.com/support-the-site
 Tags: bbPress, private replies, replies, Forums, mordauk, Pippin Williamson, pippinsplugins, Remi Corson, corsonr
 Requires at least: 3.2
-Tested up to: 3.9
-Stable Tag: 1.1.2
-
+Tested up to: 4.0
+Stable Tag: 1.2
 
 A simple plugin to allow your bbPress users to mark their replies as private.
 
@@ -42,6 +41,11 @@ Would you like to help translate the plugin into more languages? [Contact Pippin
 
 
 == Changelog ==
+
+= 1.2 =
+
+* Fix: Missing argument message
+* Fix: Email notifications no new Private Replies weren't sent since latest bbPress update
 
 = 1.1.2 =
 
