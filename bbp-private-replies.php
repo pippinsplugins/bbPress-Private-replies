@@ -39,7 +39,7 @@ class BBP_Private_Replies {
 		add_filter( 'the_excerpt', array( $this, 'hide_reply' ), 999 );
 
 		// prevent private replies from being sent in email subscriptions
-		add_filter( 'bbp_subscription_mail_message', array( $this, 'prevent_subscription_email' ), 10, 3 );
+		add_filter( 'bbp_subscription_mail_message', array( $this, 'prevent_subscription_email' ), 999999, 3 );
 
 		// add a class name indicating the read status
 		add_filter( 'post_class', array( $this, 'reply_post_class' ) );
