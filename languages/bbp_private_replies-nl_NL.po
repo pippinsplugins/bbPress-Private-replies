@@ -1,0 +1,33 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: bbPress Private Replies\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-11-16 09:52+0100\n"
+"PO-Revision-Date: 2014-12-29 23:52+0100\n"
+"Last-Translator: EJ Reinders Folmer <poedit_nospam@adviesenzo.nl>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-KeywordsList: __;_e;_x;_n;esc_attr__;esc_attr_e;esc_html__;"
+"esc_html_e;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;_x:1,2c;_n:1,2\n"
+"X-Poedit-Basepath: ../\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Generator: Poedit 1.5.7\n"
+"Language: nl_NL\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: bbp-private-replies.php:77
+msgid "Set author's post as private."
+msgstr "Markeer dit bericht als privé."
+
+#: bbp-private-replies.php:81
+msgid "Set as private reply"
+msgstr "Markeer reactie als privé"
+
+#: bbp-private-replies.php:168
+msgid "This reply has been marked as private."
+msgstr ""
+"Deze reactie is alleen zichtbaar voor de originele berichtauteur (en de "
+"forumbeheerders)."
