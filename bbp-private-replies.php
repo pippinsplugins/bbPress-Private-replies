@@ -173,7 +173,7 @@ class BBP_Private_Replies {
 			$topic_author = bbp_get_topic_author_id();
 			$reply_author = bbp_get_reply_author_id( $reply_id );
 
-			if ( ! empty( $current_user ) && $topic_author === $current_user->ID && user_can( $reply_author, 'moderate' ) ) {
+			if ( ! empty( $current_user ) && $topic_author === $current_user->ID && user_can( $reply_author, $this->get_capability() ) ) {
 				// Let the thread author view replies if the reply author is from a moderator
 				$can_view = true;
 			}
@@ -183,7 +183,7 @@ class BBP_Private_Replies {
 				$can_view = true;
 			}
 
-			if( current_user_can( 'moderate' ) ) {
+			if( current_user_can( $this->get_capability() ) ) {
 				// Let moderators view all replies
 				$can_view = true;
 			}
@@ -271,7 +271,7 @@ class BBP_Private_Replies {
 				continue;
 			}
 
-			if( user_can( $user_id, 'moderate' ) || (int) $topic_author === (int) $user_id ) {
+			if( user_can( $user_id, $this->get_capability() ) || (int) $topic_author === (int) $user_id ) {
 
 				// Get email address of subscribed user
 				$headers[] = 'Bcc: ' . get_userdata( $user_id )->user_email;
@@ -316,6 +316,17 @@ class BBP_Private_Replies {
 	public function register_plugin_styles() {
 		$css_path = plugin_dir_path( __FILE__ ) . 'css/frond-end.css';
 	    wp_enqueue_style( 'bbp_private_replies_style', plugin_dir_url( __FILE__ ) . 'css/frond-end.css', filemtime( $css_path ) );
+	}
+
+	/**
+	 * Get the capability required to view private replies.
+	 *
+	 * @since 1.3.1
+	 *
+	 * @return string
+	 */
+	public function get_capability() {
+		return apply_filters( 'bbp_private_replies_capability', 'moderate' );
 	}
 
 } // end class
