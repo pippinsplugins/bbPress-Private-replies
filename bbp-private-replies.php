@@ -12,6 +12,15 @@ Domain Path: languages
 */
 
 class BBP_Private_Replies {
+	
+	/**
+	 * The capability required to view private posts.
+	 *
+	 * @since 1.3.3
+	 * 
+	 * @var string $capability
+	 */
+	public $capability = 'moderate';
 
 	/*--------------------------------------------*
 	 * Constructor
@@ -24,6 +33,9 @@ class BBP_Private_Replies {
 
 		// load the plugin translation files
 		add_action( 'init', array( $this, 'textdomain' ) );
+		
+		// Allow others to change the capability required to view private posts.
+		add_action( 'init', array( $this, 'filter_capability' ) );
 
 		// show the "Private Reply?" checkbox
 		add_action( 'bbp_theme_before_reply_form_submit_wrapper', array( $this, 'checkbox' ) );
@@ -59,6 +71,19 @@ class BBP_Private_Replies {
 	 */
 	public function textdomain() {
 		load_plugin_textdomain( 'bbp_private_replies', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
+	}
+
+
+	/**
+	 * Called during the init action to filter the capability
+	 * required to view private replies.
+	 *
+	 * @since 1.3.3
+	 *
+	 * @return void
+	 */
+	public function filter_capability() {
+		$this->capability = apply_filters( 'bbp_private_replies_capability', $this->capability );
 	}
 
 
@@ -173,7 +198,7 @@ class BBP_Private_Replies {
 			$topic_author = bbp_get_topic_author_id();
 			$reply_author = bbp_get_reply_author_id( $reply_id );
 
-			if ( ! empty( $current_user ) && $topic_author === $current_user->ID && user_can( $reply_author, $this->get_capability() ) ) {
+			if ( ! empty( $current_user ) && $topic_author === $current_user->ID && user_can( $reply_author, $this->capability ) ) {
 				// Let the thread author view replies if the reply author is from a moderator
 				$can_view = true;
 			}
@@ -183,7 +208,7 @@ class BBP_Private_Replies {
 				$can_view = true;
 			}
 
-			if( current_user_can( $this->get_capability() ) ) {
+			if( current_user_can( $this->capability ) ) {
 				// Let moderators view all replies
 				$can_view = true;
 			}
@@ -271,7 +296,7 @@ class BBP_Private_Replies {
 				continue;
 			}
 
-			if( user_can( $user_id, $this->get_capability() ) || (int) $topic_author === (int) $user_id ) {
+			if( user_can( $user_id, $this->capability ) || (int) $topic_author === (int) $user_id ) {
 
 				// Get email address of subscribed user
 				$headers[] = 'Bcc: ' . get_userdata( $user_id )->user_email;
@@ -316,17 +341,6 @@ class BBP_Private_Replies {
 	public function register_plugin_styles() {
 		$css_path = plugin_dir_path( __FILE__ ) . 'css/frond-end.css';
 	    wp_enqueue_style( 'bbp_private_replies_style', plugin_dir_url( __FILE__ ) . 'css/frond-end.css', filemtime( $css_path ) );
-	}
-
-	/**
-	 * Get the capability required to view private replies.
-	 *
-	 * @since 1.3.1
-	 *
-	 * @return string
-	 */
-	public function get_capability() {
-		return apply_filters( 'bbp_private_replies_capability', 'moderate' );
 	}
 
 } // end class
