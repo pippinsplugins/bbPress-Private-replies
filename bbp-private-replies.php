@@ -73,9 +73,8 @@ class BBP_Private_Replies {
 		load_plugin_textdomain( 'bbp_private_replies', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
 	}
 
-
 	/**
-	 * Called during the init action to filter the capability
+	 * Called during the plugins_loaded action to filter the capability
 	 * required to view private replies.
 	 *
 	 * @since 1.3.3
@@ -86,6 +85,16 @@ class BBP_Private_Replies {
 		$this->capability = apply_filters( 'bbp_private_replies_capability', $this->capability );
 	}
 
+	/**
+	 * Retrieves the no reply address.
+	 *
+	 * @since 1.3.3
+	 *
+	 * @return string
+	 */
+	public function get_no_reply() {
+		return apply_filters( 'bbp_private_replies_no_reply_address', bbp_get_do_not_reply_address() );
+	}
 
 	/**
 	 * Outputs the "Set as private reply" checkbox
@@ -272,7 +281,6 @@ class BBP_Private_Replies {
 		$reply_content = strip_tags( bbp_get_reply_content( $reply_id ) );
 		$reply_url     = bbp_get_reply_url( $reply_id );
 		$blog_name     = wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES );
-		$do_not_reply  = '<' . sanitize_email( 'noreply@' . ltrim( get_home_url(), '^(http|https)://' ) ) . '>';
 
 		$subject = apply_filters( 'bbp_subscription_mail_title', '[' . $blog_name . '] ' . $topic_title, $reply_id, $topic_id );
 
@@ -280,7 +288,7 @@ class BBP_Private_Replies {
 		$headers = array();
 
 		// Setup the From header
-		$headers[] = 'From: ' . get_bloginfo( 'name' ) . ' ' . $do_not_reply;
+		$headers[] = 'From: ' . get_bloginfo( 'name' ) . ' <' . $this->get_no_reply() . '>';
 
 		// Get topic subscribers and bail if empty
 		$user_ids = bbp_get_topic_subscribers( $topic_id, true );
@@ -306,7 +314,7 @@ class BBP_Private_Replies {
 			}
 		}
 
-		wp_mail( $do_not_reply, $subject, $message, $headers );
+		wp_mail( $this->get_no_reply(), $subject, $message, $headers );
 	}
 
 
