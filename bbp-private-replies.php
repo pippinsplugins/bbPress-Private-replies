@@ -214,7 +214,7 @@ class BBP_Private_Replies {
 			$this->subscription_email( $message, $reply_id, $topic_id );
 			return false;
 		}
-		
+
 		return $message; // message unchanged
 	}
 
@@ -271,11 +271,13 @@ class BBP_Private_Replies {
 				continue;
 			}
 
-			if( user_can( $user_id, 'moderate' ) || (int) $topic_author === (int) $user_id ) {
+			$should_notify_op = user_can( $reply_author, 'moderate' ) && (int) $topic_author === (int) $user_id;
+
+			if( user_can( $user_id, 'moderate' ) || $should_notify_op ) {
 
 				// Get email address of subscribed user
 				$headers[] = 'Bcc: ' . get_userdata( $user_id )->user_email;
-			
+
 			}
 		}
 
