@@ -247,7 +247,7 @@ class BBP_Private_Replies {
 		$reply_content = strip_tags( bbp_get_reply_content( $reply_id ) );
 		$reply_url     = bbp_get_reply_url( $reply_id );
 		$blog_name     = wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES );
-		$do_not_reply  = '<noreply@' . ltrim( get_home_url(), '^(http|https)://' ) . '>';
+		$do_not_reply  = '<' . sanitize_email( 'noreply@' . ltrim( get_home_url(), '^(http|https)://' ) ) . '>';
 
 		$subject = apply_filters( 'bbp_subscription_mail_title', '[' . $blog_name . '] ' . $topic_title, $reply_id, $topic_id );
 
