@@ -35,7 +35,7 @@ class BBP_Private_Replies {
 		add_action( 'init', array( $this, 'textdomain' ) );
 
 		// Allow others to change the capability required to view private posts.
-		add_action( 'init', array( $this, 'filter_capability' ) );
+		add_action( 'plugins_loaded', array( $this, 'filter_capability' ) );
 
 		// show the "Private Reply?" checkbox
 		add_action( 'bbp_theme_before_reply_form_submit_wrapper', array( $this, 'checkbox' ) );
