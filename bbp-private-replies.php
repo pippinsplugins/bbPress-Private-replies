@@ -3,13 +3,15 @@
 Plugin Name: bbPress - Private Replies
 Plugin URL: http://pippinsplugins.com/bbpress-private-replies
 Description: Allows users to set replies as private so that only the original poster and admins can see it
-Version: 1.3.3
-Author: Pippin Williamson and Remi Corson
+Version: 1.4.0
+Author: Pippin Williamson, Remi Corson, David Anderson
 Author URI: http://pippinsplugins.com
-Contributors: mordauk, corsonr
+Contributors: mordauk, corsonr, DavidAnderson
 Text Domain: bbp_private_replies
 Domain Path: languages
 */
+
+if ( !defined( 'ABSPATH' ) ) die( 'No direct access.' );
 
 class BBP_Private_Replies {
 
@@ -22,6 +24,15 @@ class BBP_Private_Replies {
 	 */
 	public $capability = 'moderate';
 
+	/**
+	 * Post IDs that are moderator-only.
+	 *
+	 * @since 1.4.0
+	 *
+	 * @var array $moderator_only_posts
+	 */
+	private $moderator_only_posts = array();
+
 	/*--------------------------------------------*
 	 * Constructor
 	 *--------------------------------------------*/
@@ -29,7 +40,7 @@ class BBP_Private_Replies {
 	/**
 	 * Initializes the plugin by setting localization, filters, and administration functions.
 	 */
-	function __construct() {
+	public function __construct() {
 
 		// load the plugin translation files
 		add_action( 'init', array( $this, 'textdomain' ) );
@@ -121,13 +132,32 @@ class BBP_Private_Replies {
 			<?php endif; ?>
 
 		</p>
+		
+		<?php if ( !current_user_can( $this->capability ) ) return; ?>
+		
+		<p>
+
+			<input name="bbp_moderator_only_reply" id="bbp_moderator_only_reply" type="checkbox"<?php checked( '1', $this->is_moderator_only( bbp_get_reply_id() ) ); ?> value="1" tabindex="<?php bbp_tab_index(); ?>" />
+
+			<?php if ( bbp_is_reply_edit() && ( get_the_author_meta( 'ID' ) != bbp_get_current_user_id() ) ) : ?>
+
+				<label for="bbp_moderator_only_reply"><?php _e( 'Set author\'s post as moderator-only.', 'bbp_moderator_only_replies' ); ?></label>
+
+			<?php else : ?>
+
+				<label for="bbp_moderator_only_reply"><?php _e( 'Set as moderator-only reply', 'bbp_moderator_only_replies' ); ?></label>
+
+			<?php endif; ?>
+
+		</p>
+		
 <?php
 
 	}
 
 
 	/**
-	 * Stores the private state on reply creation and edit
+	 * Stores the private / moderator-only state on reply creation and edit
 	 *
 	 * @since 1.0
 	 *
@@ -135,7 +165,7 @@ class BBP_Private_Replies {
 	 * @param $topic_id int The ID of the topic the reply belongs to
 	 * @param $forum_id int The ID of the forum the topic belongs to
 	 * @param $anonymous_data bool Are we posting as an anonymous user?
-	 * @param $author_id int The ID of user creating the reply, or the ID of the replie's author during edit
+	 * @param $author_id int The ID of user creating the reply, or the ID of the reply's author during edit
 	 * @param $is_edit bool Are we editing a reply?
 	 *
 	 * @return void
@@ -146,6 +176,13 @@ class BBP_Private_Replies {
 			update_post_meta( $reply_id, '_bbp_reply_is_private', '1' );
 		else
 			delete_post_meta( $reply_id, '_bbp_reply_is_private' );
+
+		if ( ! current_user_can( $this->capability ) ) return;
+			
+		if( isset( $_POST['bbp_moderator_only_reply'] ) )
+			update_post_meta( $reply_id, '_bbp_reply_is_moderator_only', '1' );
+		else
+			delete_post_meta( $reply_id, '_bbp_reply_is_moderator_only' );
 
 	}
 
@@ -184,7 +221,40 @@ class BBP_Private_Replies {
 		return (bool) apply_filters( 'bbp_reply_is_private', (bool) $retval, $reply_id );
 	}
 
+	/**
+	 * Determines if a reply is marked as moderator-only
+	 *
+	 * @since 1.4.0
+	 *
+	 * @param $reply_id int The ID of the reply
+	 *
+	 * @return bool
+	 */
+	public function is_moderator_only( $reply_id = 0 ) {
 
+		$retval 	= false;
+
+		// Checking a specific reply id
+		if ( !empty( $reply_id ) ) {
+			$reply     = bbp_get_reply( $reply_id );
+			$reply_id = !empty( $reply ) ? $reply->ID : 0;
+
+		// Using the global reply id
+		} elseif ( bbp_get_reply_id() ) {
+			$reply_id = bbp_get_reply_id();
+
+		// Use the current post id
+		} elseif ( !bbp_get_reply_id() ) {
+			$reply_id = get_the_ID();
+		}
+
+		if ( ! empty( $reply_id ) ) {
+			$retval = get_post_meta( $reply_id, '_bbp_reply_is_moderator_only', true );
+		}
+
+		return (bool) apply_filters( 'bbp_reply_is_moderator_only', (bool) $retval, $reply_id );
+	}
+	
 	/**
 	 * Hides the reply content for users that do not have permission to view it
 	 *
@@ -200,7 +270,20 @@ class BBP_Private_Replies {
 		if( empty( $reply_id ) )
 			$reply_id = bbp_get_reply_id( $reply_id );
 
-		if( $this->is_private( $reply_id ) ) {
+		if( $this->is_moderator_only( $reply_id ) ) {
+
+			$can_view     = false;
+
+			if( current_user_can( $this->capability ) ) {
+				// Let moderators view all replies
+				$can_view = true;
+			}
+
+			if( ! $can_view ) {
+				$content = __( 'This reply has been marked as moderator-only.', 'bbp_private_replies' );
+			}
+
+		} elseif ( $this->is_private( $reply_id ) ) {
 
 			$can_view     = false;
 			$current_user = is_user_logged_in() ? wp_get_current_user() : false;
@@ -244,7 +327,7 @@ class BBP_Private_Replies {
 	 */
 	public function prevent_subscription_email( $message, $reply_id, $topic_id ) {
 
-		if( $this->is_private( $reply_id ) ) {
+		if( $this->is_private( $reply_id ) || $this->is_moderator_only( $reply_id ) ) {
 			$this->subscription_email( $message, $reply_id, $topic_id );
 			return false;
 		}
@@ -335,12 +418,51 @@ class BBP_Private_Replies {
 		if( bbp_get_reply_post_type() != get_post_type( $reply_id ) )
 			return $classes;
 
+		static $added_footer_js = false;
+			
+		if( $this->is_moderator_only( $reply_id ) ) {
+			$classes[] = 'bbp-moderator-only-reply';
+			if ( current_user_can( $this->capability ) ) {
+				$classes[] = 'is-moderator';
+			} else {
+				$classes[] = 'not-moderator';
+				$this->moderator_only_posts[] = $reply_id;
+				if ( ! $added_footer_js ) {
+					add_action( 'wp_footer', array ( $this, 'wp_footer' ) );
+					$added_footer_js = true;
+				}
+			}
+		}
+
 		if( $this->is_private( $reply_id ) )
 			$classes[] = 'bbp-private-reply';
 
 		return $classes;
 	}
 
+	/**
+	 * Add JavaScript to hide the elements that cannot be hidden with CSS
+	 *
+	 * @since 1.4.0
+	 *
+	 * @return void
+	 */
+	public function wp_footer() {
+
+		if ( empty( $this->moderator_only_posts ) ) return;
+		
+		?><script>
+		<?php
+		
+		foreach ($this->moderator_only_posts as $post_id) {
+			echo "document.getElementById('post-{$post_id}').style.visibility = 'hidden';\n";
+		}
+		
+		?></script>
+		<?php
+	
+	}
+	
 	/**
 	 * Load the plugin's CSS files
 	 *
