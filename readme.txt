@@ -1,11 +1,11 @@
-=== bbPress - Private Replies ===
-Author URI: http://pippinsplugins.com
-Plugin URI: http://pippinsplugins.com/bbpress-private-replies
-Contributors: mordauk, corsonr
-Donate link: http://pippinsplugins.com/support-the-site
-Tags: bbPress, private replies, replies, Forums, mordauk, Pippin Williamson, pippinsplugins, Remi Corson, corsonr
-Requires at least: 3.2
-Tested up to: 5.1
+=== bbPress - Private Replies - Enhanced ===
+Author URI: https://david.dw-perspective.org.uk
+Plugin URI: https://github.com/DavidAnderson684/bbpress-private-replies-enhanced
+Contributors: mordauk, corsonr, DavidAnderson
+Donate link: https://david.dw-perspective.org.uk/donate
+Tags: bbPress, private replies, replies, Forums
+Requires at least: 4.9
+Tested up to: 5.2
 Stable Tag: 1.4.0
 
 A simple plugin to allow your bbPress users to mark their replies as private (visible only to the user and moderators), or moderator-only.
@@ -42,6 +42,12 @@ Would you like to help translate the plugin into more languages? [Contact Pippin
 
 
 == Changelog ==
+
+= 1.4.1 - 03/May/2019 =
+
+* Make text domain agree with plugin slug
+* Change plugin slug to bbpress-private-replies-enhanced
+* Mark as requiring WP 4.9+. Likely works very much earlier, but nothing earlier will receive support.
 
 = 1.4.0 =
 

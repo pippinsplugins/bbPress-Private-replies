@@ -1,13 +1,13 @@
 <?php
 /*
-Plugin Name: bbPress - Private Replies
-Plugin URL: http://pippinsplugins.com/bbpress-private-replies
+Plugin Name: bbPress - Private Replies - Enhanced
+Plugin URL: https://github.com/DavidAnderson684/bbpress-private-replies-enhanced
 Description: Allows users to set replies as private so that only the original poster and admins can see it
 Version: 1.4.0
 Author: Pippin Williamson, Remi Corson, David Anderson
-Author URI: http://pippinsplugins.com
+Author URI: https://david.dw-perspective.org.uk
 Contributors: mordauk, corsonr, DavidAnderson
-Text Domain: bbp_private_replies
+Text Domain: bbpress-private-replies-enhanced
 Domain Path: languages
 */
 
@@ -81,7 +81,7 @@ class BBP_Private_Replies {
 	 * @return void
 	 */
 	public function textdomain() {
-		load_plugin_textdomain( 'bbp_private_replies', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
+		load_plugin_textdomain( 'bbpress-private-replies-enhanced', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
 	}
 
 	/**
@@ -280,7 +280,7 @@ class BBP_Private_Replies {
 			}
 
 			if( ! $can_view ) {
-				$content = __( 'This reply has been marked as moderator-only.', 'bbp_private_replies' );
+				$content = __( 'This reply has been marked as moderator-only.', 'bbpress-private-replies-enhanced' );
 			}
 
 		} elseif ( $this->is_private( $reply_id ) ) {
@@ -306,7 +306,7 @@ class BBP_Private_Replies {
 			}
 
 			if( ! $can_view ) {
-				$content = __( 'This reply has been marked as private.', 'bbp_private_replies' );
+				$content = __( 'This reply has been marked as private.', 'bbpress-private-replies-enhanced' );
 			}
 		}
 
