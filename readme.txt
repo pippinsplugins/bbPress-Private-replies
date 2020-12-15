@@ -5,8 +5,8 @@ Contributors: mordauk, corsonr, DavidAnderson
 Donate link: https://david.dw-perspective.org.uk/donate
 Tags: bbPress, private replies, replies, Forums
 Requires at least: 4.9
-Tested up to: 5.2
-Stable Tag: 1.4.1
+Tested up to: 5.6
+Stable Tag: 1.5.0
 
 A simple plugin to allow your bbPress users to mark their replies as private (visible only to the user and moderators), or moderator-only.
 
@@ -42,6 +42,10 @@ Would you like to help translate the plugin into more languages? [Contact Pippin
 
 
 == Changelog ==
+
+= 1.5.0 - 04/Dec/2020 =
+
+* Added daily cron scheduler for replace older than 3 months private replies with generic "deleted" message 
 
 = 1.4.1 - 03/May/2019 =
 

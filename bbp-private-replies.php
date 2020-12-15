@@ -3,7 +3,7 @@
 Plugin Name: bbPress - Private Replies - Enhanced
 Plugin URL: https://github.com/DavidAnderson684/bbpress-private-replies-enhanced
 Description: Allows users to set replies as private so that only the original poster and admins can see it
-Version: 1.4.1
+Version: 1.5.0
 Author: Pippin Williamson, Remi Corson, David Anderson
 Author URI: https://david.dw-perspective.org.uk
 Contributors: mordauk, corsonr, DavidAnderson
@@ -69,6 +69,14 @@ class BBP_Private_Replies {
 
 		// register css files
 		add_action( 'wp_enqueue_scripts', array( $this, 'register_plugin_styles' ) );
+		
+		
+		// add daily scheduler for replace older than 3 months private replies with generic "deleted" message 
+		if ( !wp_next_scheduled( 'bbp_private_replies_delete' )) 
+		{
+			wp_schedule_event( time(), 'daily', 'bbp_private_replies_delete' );
+		}
+		add_action( 'bbp_private_replies_delete', array($this, 'delete_private_replies_daily') );
 
 	} // end constructor
 
@@ -473,6 +481,64 @@ class BBP_Private_Replies {
 	public function register_plugin_styles() {
 		$css_path = plugin_dir_path( __FILE__ ) . 'css/frond-end.css';
 	    wp_enqueue_style( 'bbp_private_replies_style', plugin_dir_url( __FILE__ ) . 'css/frond-end.css', filemtime( $css_path ) );
+	}
+	
+	/**
+	 * Replace older than 3 months private replies with generic "deleted" message 
+	 *
+	 * @since 1.5.0
+	 *
+	 * @return void
+	 */
+	public function delete_private_replies_daily() {
+		
+		
+		$args = apply_filters( 'bbp_private_replies_is_private_query_args', array(
+				'post_type' => 'reply',
+				'posts_per_page'=> -1,
+				'date_query'     => array(
+					'column'  => 'post_date_gmt',
+					'before'   => date('Y-m-d', strtotime('-3 month')),
+					'inclusive' => true
+				),
+				'meta_query' => array(
+					'relation' => 'AND',
+					'_bbp_reply_is_private_clause' => array(
+						'key' => '_bbp_reply_is_private',
+						'value' => '1',
+					),
+					'_bbp_reply_private_deleted_clause' => array(
+						'key' => '_bbp_reply_private_is_deleted',
+						'compare' => 'NOT EXISTS',
+					), 
+				),
+			)
+		);
+
+		$privatereply_query = new WP_Query($args);
+		if ($privatereply_query->have_posts()) 
+		{
+		
+			$generic_deleted_message = __( 'Private reply automatically removed after 3 months.', 'bbp_private_replies' );
+			while ($privatereply_query->have_posts()) 
+			{
+				$privatereply_query->the_post();
+				$privatereply_data =  apply_filters( 'bbp_private_replies_is_delete_query',array(
+														  'ID' => get_the_ID(),
+														  'post_content' => $generic_deleted_message,
+														  'meta_input' => array(
+															'_bbp_reply_private_is_deleted' => '1',
+														   ),
+														   get_the_ID()
+														)   
+													);
+ 
+				wp_update_post( $privatereply_data );
+				
+			}
+
+		}
+		
 	}
 
 } // end class
