@@ -5,7 +5,7 @@ Contributors: mordauk, corsonr, DavidAnderson
 Donate link: https://david.dw-perspective.org.uk/donate
 Tags: bbPress, private replies, replies, Forums
 Requires at least: 4.9
-Tested up to: 5.5.3
+Tested up to: 5.6
 Stable Tag: 1.5.0
 
 A simple plugin to allow your bbPress users to mark their replies as private (visible only to the user and moderators), or moderator-only.
