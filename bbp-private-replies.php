@@ -3,7 +3,7 @@
 Plugin Name: bbPress - Private Replies - Enhanced
 Plugin URL: https://github.com/DavidAnderson684/bbpress-private-replies-enhanced
 Description: Allows users to set replies as private so that only the original poster and admins can see it
-Version: 1.5.0
+Version: 1.5.1
 Author: Pippin Williamson, Remi Corson, David Anderson
 Author URI: https://david.dw-perspective.org.uk
 Contributors: mordauk, corsonr, DavidAnderson
@@ -492,6 +492,7 @@ class BBP_Private_Replies {
 	 */
 	public function delete_private_replies_daily() {
 		
+		if (!apply_filters( 'bbp_private_replies_delete_private_replies_daily', true )) return;
 		
 		$args = apply_filters( 'bbp_private_replies_is_private_query_args', array(
 				'post_type' => 'reply',
