@@ -1,18 +1,18 @@
-=== bbPress - Private Replies ===
-Author URI: http://pippinsplugins.com
-Plugin URI: http://pippinsplugins.com/bbpress-private-replies
-Contributors: mordauk, corsonr
-Donate link: http://pippinsplugins.com/support-the-site
-Tags: bbPress, private replies, replies, Forums, mordauk, Pippin Williamson, pippinsplugins, Remi Corson, corsonr
-Requires at least: 3.2
-Tested up to: 4.7
-Stable Tag: 1.3.3
+=== bbPress - Private Replies - Enhanced ===
+Author URI: https://david.dw-perspective.org.uk
+Plugin URI: https://github.com/DavidAnderson684/bbpress-private-replies-enhanced
+Contributors: mordauk, corsonr, DavidAnderson
+Donate link: https://david.dw-perspective.org.uk/donate
+Tags: bbPress, private replies, replies, Forums
+Requires at least: 4.9
+Tested up to: 5.6
+Stable Tag: 1.5.1
 
-A simple plugin to allow your bbPress users to mark their replies as private.
+A simple plugin to allow your bbPress users to mark their replies as private (visible only to the user and moderators), or moderator-only.
 
 == Description ==
 
-This add-on plugin for bbPress will allow your forum posters to mark their replies as private, meaning that only the original poster and forum moderators can see the content of the reply. This is a great plugin to install if you use bbPress as a support forum where users may need to share confidential information, such as site URLs, passwords, etc.
+This add-on plugin for bbPress will allow your forum posters to mark their replies as private, meaning that only the original poster and forum moderators can see the content of the reply; or as moderator-only. This is a great plugin to install if you use bbPress as a support forum where users may need to share confidential information, such as site URLs, passwords, etc., or where moderators want to share information that is not visible to other users.
 
 If you have suggestions or bugfixes for the plugin, please report them on [Github](https://github.com/pippinsplugins/bbPress-Private-replies).
 
@@ -42,6 +42,24 @@ Would you like to help translate the plugin into more languages? [Contact Pippin
 
 
 == Changelog ==
+
+= 1.5.1 - 15/Dec/2020 =
+
+* TWEAK: Introduce filter bbp_private_replies_delete_private_replies_daily to allow disabling of automatic deleting of private messages
+
+= 1.5.0 - 04/Dec/2020 =
+
+* Added daily cron scheduler for replace older than 3 months private replies with generic "deleted" message 
+
+= 1.4.1 - 03/May/2019 =
+
+* Make text domain agree with plugin slug
+* Change plugin slug to bbpress-private-replies-enhanced
+* Mark as requiring WP 4.9+. Likely works very much earlier, but nothing earlier will receive support.
+
+= 1.4.0 =
+
+* Add a new "moderator-only" replies feature. These differ from "private replies" in that they are also hidden from the topic poster (unless they are a moderator)
 
 = 1.3.3 =
 

@@ -5,3 +5,11 @@
 .topic .bbp-private-reply {
 	background: #78C0EC !important;
 }
+
+.topic .bbp-moderator-only-reply.not-moderator {
+	display: none !important;
+}
+
+.topic .bbp-moderator-only-reply.is-moderator {
+	background: #FFC107 !important;
+}
